@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+import time
 
 
 
@@ -29,21 +29,37 @@ def login():
     
     options = Options()
     options.headless = True
-    options.add_experimental_option("detach", False)
+    options.add_experimental_option("detach", True)
+    options.add_argument('--disable-notifications')
     service = Service(executable_path=r'/usr/bin/chromedriver')
     driver = webdriver.Chrome(service=service, options=options)
     try:
-        driver.implicitly_wait(10)
+        # driver.implicitly_wait(30)
         driver.get("https://www.economist.com")
+        # wait = WebDriverWait(driver, 20)
 
+        time.sleep(5)
+        # def expand_shadow_element(element):
+        #     shadow_root = driver.execute_script('return arguments[0].shadowRoot', element)
+        #     return shadow_root
+        
+        # outer = expand_shadow_element(driver.find_element_by_css_selector("#notice > div.message-component.message-row.teg-stackable.teg-footer > div.message-component.message-column.teg-stackable--accept > button"))
+        # inner = outer.find_element_by_css_selector("#notice > div.message-component.message-row.teg-stackable.teg-footer > div.message-component.message-column.teg-stackable--accept > button")
+        # inner.click()
+
+        
         print("check1")
+
+
         
         print("check2")
-        # WebDriverWait(driver, 5).until(
-        #     EC.presence_of_element_located((By.XPATH, '//*[@id="notice"]/div[4]/div[2]/button'))
-        # ).click()
+        accept_button = WebDriverWait(driver, 2).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="notice"]/div[4]/div[2]/button'))
+        )
+        accept_button.click()
+        
         print("...check")
-        driver.find_element(By.XPATH,'//*[@id="notice"]/div[4]/div[2]/button').click()
+        # driver.find_element(By.LINK_TEXT,'Accept all').click()
         print("check3")
         logger = driver.find_element(By.XPATH,'//*[@id="__next"]/div/div/div[2]/header/div/div[2]/div/div/div/a[2]').click()
         print("check4")
